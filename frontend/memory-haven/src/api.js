@@ -36,19 +36,31 @@ export const loginUser = async (email, password) => {
 };
 
 // Create a time capsule
-export const createTimeCapsule = async (title, message, openDate) => {
+export const createTimeCapsule = async (title, message, openDate, files) => {
   const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('No token found. Please log in.');
+  }
+   
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('description', message);
+  formData.append('openDate', openDate);
+
+  if (files && files.length > 0) {
+    files.forEach((file) => {
+      formData.append('media', file);
+    });
   }
 
   const response = await fetch(`${API_URL}/api/memoryhaven`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ title, message, openDate }),
+    // body: JSON.stringify({ title, message, openDate }),
+    body: formData,
   });
   return handleResponse(response);
 };

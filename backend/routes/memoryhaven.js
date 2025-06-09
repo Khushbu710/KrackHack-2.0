@@ -24,7 +24,11 @@ router.post("/", authenticate, upload.any(), async (req, res) => {
     }
 
     // Store file paths
-    const mediaPaths = req.files.map((file) => file.path);
+    // const mediaPaths = req.files.map((file) => file.path);
+    // const mediaPaths = req.files.map((file) => `/uploads/${file.filename}`);
+    const mediaPaths = req.files.map((file) => `${req.protocol}://${req.get("host")}/uploads/${file.filename}`);
+
+
 
     // Create a new memory haven
     const newMemoryHaven = new MemoryHaven({
@@ -46,8 +50,13 @@ router.post("/", authenticate, upload.any(), async (req, res) => {
 // Fetch all memory havens for the authenticated user
 router.get("/", authenticate, async (req, res) => {
   try {
-    const memoryHavens = await MemoryHaven.find({ userId: req.userId });
+    const currentDate = new Date();
 
+    // Only fetch memory havens where openDate is in the past or today
+    const memoryHavens = await MemoryHaven.find({
+      userId: req.userId,
+      openDate: { $lte: currentDate }, // Only show unlocked capsules
+    });
     if (!memoryHavens.length) {
       return res.status(404).json({ message: "No memory havens found" });
     }
@@ -60,6 +69,7 @@ router.get("/", authenticate, async (req, res) => {
 });
 
 // Ensure uploaded files are accessible
-router.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+// router.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 module.exports = router;
+

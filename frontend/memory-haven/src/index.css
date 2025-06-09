@@ -291,3 +291,183 @@ button {
 button:hover {
   background-color: #ff3366;
 }
+
+
+.capsule-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  width: 250px;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.capsule-card:hover {
+  transform: scale(1.05);
+}
+
+
+.capsule-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff4d6d; /* Pinkish */
+  margin-bottom: 8px;
+}
+
+.capsule-description {
+  font-size: 14px;
+  color: #555;
+}
+
+
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Quicksand:wght@400;600&display=swap');
+
+.capsule-container {
+  display: flex;                         /* Flex layout */
+  flex-wrap: wrap;                       /* Ensures capsules move to the next line */
+  max-width: 100%; /* Crucial for wrapping */
+  margin: 0; /* Center the container */
+  gap: 16px;                             /* Adjust spacing between capsules */
+  justify-content: center;              /* Optional: center the row */
+  
+  /* background: rgba(180, 235, 170, 0.9);  Soft pastel green */
+  /* border-radius: 15px; */
+  padding: 15px;
+  /* margin: 10px; */
+  /* text-align: center; */
+  /* box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); */
+  /* transition: transform 0.2s ease-in-out; */
+  /* font-family: 'Poppins', sans-serif;   Playful and modern font */
+}
+
+.capsule {
+  background: rgba(180, 235, 170, 0.9);  /* Soft pastel green */
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  font-family: 'Poppins', sans-serif;
+  width: 240px;                          /* Ensures all boxes are of the same width */
+  height: 150px;                         /* Ensures all boxes are of the same height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;              /* Centers content inside */
+  align-items: center;                  /* Centers content horizontally */
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.capsule::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+
+.capsule:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.capsule:hover::-webkit-scrollbar-thumb {
+  background-color: #a3d9a5;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.capsule:hover {
+  transform: scale(1.05);
+  scrollbar-width: thin;
+  scrollbar-color: #a3d9a5 transparent; /* thumb color, track transparent */
+}
+
+
+
+.capsule-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #8B5E3B; /* Soft brown */
+}
+
+.capsule-description {
+  font-size: 14px;
+  color: #444; /* Soft gray for readability */
+}
+
+.capsule-container:hover .capsule-title {
+  color: #1E4D2B; /* Slightly darker green on hover */
+}
+.thumbnail {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+}
+
+.video-thumbnail {
+  max-width: 120px !important;
+  height: auto !important;
+}
+
+.audio-thumbnail {
+  width: 100% !important;
+  height: 30px !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 5px auto !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.media-container {
+  display: flex !important;
+  flex-direction: column !important;  /* stack items vertically */
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 10px !important;
+  width: 100% !important;
+}
+
+.capsule-container .thumbnail {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+img {
+  width: 50px !important;
+  height: 50px !important;
+  object-fit: cover !important;
+  display: block !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+video {
+  width: 50px !important;
+  height: 50px !important;
+  object-fit: cover !important;
+  display: block !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.thumbnail {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+}

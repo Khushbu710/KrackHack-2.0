@@ -35,18 +35,20 @@ const memoryHavenSchema = new mongoose.Schema({
     type: String,
     trim: true,
   }],
-  image: { 
-    type: String, 
-    default: null 
-  }, // Stores image file path or URL
-  video: { 
-    type: String, 
-    default: null 
-  }, // Stores video file path or URL
-  audio: { 
-    type: String, 
-    default: null 
-  }, // Stores audio file path or URL
+  // image: { 
+  //   type: String, 
+  //   default: null 
+  // }, // Stores image file path or URL
+  // video: { 
+  //   type: String, 
+  //   default: null 
+  // }, // Stores video file path or URL
+  // audio: { 
+  //   type: String, 
+  //   default: null 
+  // }, // Stores audio file path or URL
+  media: [{ type: String }], // ✅ Store all media files in an array
+
   createdAt: { 
     type: Date, 
     default: Date.now 

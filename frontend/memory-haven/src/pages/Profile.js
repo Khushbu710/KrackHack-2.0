@@ -57,14 +57,53 @@ function Profile() {
       ) : error ? (
         <p style={{ color: "red" }}>Error: {error}</p>
       ) : capsules.length > 0 ? (
-        <ul>
+        <div className="capsule-container">
           {capsules.map((capsule) => (
-            <li key={capsule._id}>
-              <h3>{capsule.title}</h3>
-              <p>{capsule.description}</p>
-            </li>
+            <div key={capsule._id} className="capsule">
+              <h3 className="capsule-title">{capsule.title}</h3>
+              <p className="capsule-description">{capsule.description}</p>
+
+              {/* Check if media exists and display it */}
+              {capsule.media && capsule.media.length > 0 && (
+                <div className="media-container">
+                  {capsule.media.map((file, index) => {
+                    const fileUrl = file.startsWith("http")
+                      ? file
+                      : `${API_URL.replace(/\/$/, "")}/uploads/${file.replace(/^\/+/, "")}`;
+                    const fileType = file.split(".").pop();
+
+                    if (["png", "jpg", "jpeg", "gif"].includes(fileType)) {
+                      return (
+                        <img
+                          key={index}
+                          src={fileUrl}
+                          alt="Capsule Media"
+                          className="media-image"
+                        />
+                      );
+                    } else if (["mp4", "webm"].includes(fileType)) {
+                      return (
+                        <video key={index} controls className="media-video">
+                          <source src={fileUrl} type={`video/${fileType}`} />
+                          Your browser does not support the video tag.
+                        </video>
+                      );
+                    } else if (["mp3", "wav", "opus", "mp4"].includes(fileType)) {
+                      return (
+                        <audio key={index} controls className="media-audio">
+                          <source src={fileUrl} type={`audio/${fileType}`} />
+                          Your browser does not support the audio element.
+                        </audio>
+                      );
+                    } else {
+                      return <p key={index}>Unsupported media type</p>;
+                    }
+                  })}
+                </div>
+              )}
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>You haven't created any capsules yet.</p>
       )}

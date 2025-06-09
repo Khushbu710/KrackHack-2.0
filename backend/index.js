@@ -14,8 +14,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
-app.use(helmet()); // Secure HTTP headers
+// app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow frontend origin
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+    exposedHeaders: ["Content-Length", "X-Filename"], 
+  })
+);
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false, // ✅ Allow static file requests
+  })
+);// Secure HTTP headers
 app.use(express.json());
 app.use(morgan("dev")); // Log HTTP requests
 
@@ -45,10 +58,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Serve uploaded files as static content
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*"); // ✅ Allow all origins
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin"); // ✅ Crucial Fix
+  next();
+}, express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/api/auth", require("./routes/auth"));
+app.use("/api/auth", require("./routes/auth"));  // ✅ Updated import
 app.use("/api/memoryhaven", require("./routes/memoryhaven"));
 
 // File upload route
