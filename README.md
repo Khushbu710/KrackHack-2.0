@@ -33,7 +33,7 @@
 3. Create a .env file:
     PORT=5000
     MONGO_URI=mongodb+srv://user1:user1%40mongo@cluster-mh.pjjo2.mongodb.net/memory_haven?retryWrites=true&w=majority&appName=Cluster-mh
-    JWT_SECRET=khushbuwebdev
+    JWT_SECRET=HIDDEN
 5. Start the backend server: node index.js
 
 
