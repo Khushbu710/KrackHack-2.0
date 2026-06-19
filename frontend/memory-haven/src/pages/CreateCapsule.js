@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../index.css";
+import API_URL from "../api";
 
 function CreateCapsule() {
   const [title, setTitle] = useState("");
@@ -34,34 +35,42 @@ function CreateCapsule() {
       return;
     }
 
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("User not authenticated! Please log in.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("openDate", openDate);
     formData.append("description", message);
-    
-    mediaFiles.forEach((file, index) => {
-      if (file) formData.append(`media${index}`, file);
+
+    // Append media files
+    mediaFiles.forEach((file) => {
+      if (file) {
+        formData.append("media", file);
+      }
     });
 
     try {
-      const token = localStorage.getItem("token"); 
-
-      if (!token) {
-        alert("User not authenticated! Please log in.");
-        return;
-      }
-
-      const response = await fetch("http://localhost:5000/api/memoryhaven", {
+      const response = await fetch(`${API_URL}/api/memoryhaven`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
 
       const data = await response.json();
+
       if (response.ok) {
         alert("Capsule created successfully!");
+        setTitle("");
+        setOpenDate("");
+        setMessage("");
+        setMediaFiles([]);
       } else {
         alert(data.message || "Error creating capsule");
       }
@@ -77,24 +86,56 @@ function CreateCapsule() {
 
       <div className="form-container">
         <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Title" value={title} onChange={handleTitleChange} />
-          <input type="date" value={openDate} onChange={handleDateChange} />
-          <textarea placeholder="Write your message..." value={message} onChange={handleMessageChange}></textarea>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={handleTitleChange}
+          />
 
+          <input
+            type="date"
+            value={openDate}
+            onChange={handleDateChange}
+          />
+
+          <textarea
+            placeholder="Write your message..."
+            value={message}
+            onChange={handleMessageChange}
+          ></textarea>
+
+          {/* File Upload Inputs */}
           {mediaFiles.map((file, index) => (
             <div key={index} className="file-input-container">
-              <input 
-                type="file" 
-                accept="image/*, video/*, audio/*" 
+              <input
+                type="file"
+                accept="image/*, video/*, audio/*"
                 onChange={(e) => handleFileChange(e, index)}
               />
-              <button type="button" className="remove-btn" onClick={() => removeMediaInput(index)}>❌</button>
+              <button
+                type="button"
+                className="remove-btn"
+                onClick={() => removeMediaInput(index)}
+              >
+                ❌
+              </button>
             </div>
           ))}
 
-          <button type="button" className="add-media-btn" onClick={addMediaInput}>➕ Add More Media</button>
-            <br></br>
-          <button type="submit" className="create-btn">Create Capsule</button>
+          <button
+            type="button"
+            className="add-media-btn"
+            onClick={addMediaInput}
+          >
+            ➕ Add More Media
+          </button>
+
+          <br />
+
+          <button type="submit" className="create-btn">
+            Create Capsule
+          </button>
         </form>
       </div>
     </div>

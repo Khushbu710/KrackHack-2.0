@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API_URL from "../api"; // Import backend URL
+import API_URL from "../api";
 
 function Profile() {
   const [capsules, setCapsules] = useState([]);
@@ -9,7 +9,6 @@ function Profile() {
   useEffect(() => {
     const fetchUserCapsules = async () => {
       const token = localStorage.getItem("token");
-      console.log("Token:", token); // Debugging Token
 
       if (!token) {
         setError("You are not authenticated. Please log in.");
@@ -18,22 +17,17 @@ function Profile() {
       }
 
       try {
-        console.log("Fetching from:", `${API_URL}/api/memoryhaven`); // Check API URL
-
         const response = await fetch(`${API_URL}/api/memoryhaven`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        console.log("Response status:", response.status); // Debug response status
-
         if (!response.ok) {
-          throw new Error(`Failed to fetch capsules. Status: ${response.status}`);
+          throw new Error(`Failed to fetch capsules.`);
         }
 
         const data = await response.json();
-        console.log("Fetched Capsules:", data); // Debug response data
         setCapsules(data);
       } catch (error) {
         console.error("Error fetching user capsules:", error);
@@ -52,6 +46,7 @@ function Profile() {
       <p>Manage your time capsules here.</p>
 
       <h2>Your Capsules</h2>
+
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -63,16 +58,18 @@ function Profile() {
               <h3 className="capsule-title">{capsule.title}</h3>
               <p className="capsule-description">{capsule.description}</p>
 
-              {/* Check if media exists and display it */}
+              {/* Media Preview */}
               {capsule.media && capsule.media.length > 0 && (
                 <div className="media-container">
                   {capsule.media.map((file, index) => {
                     const fileUrl = file.startsWith("http")
                       ? file
-                      : `${API_URL.replace(/\/$/, "")}/uploads/${file.replace(/^\/+/, "")}`;
-                    const fileType = file.split(".").pop();
+                      : `${API_URL}${file}`;
 
-                    if (["png", "jpg", "jpeg", "gif"].includes(fileType)) {
+                    const extension = file.split(".").pop().toLowerCase();
+
+                    // 🖼 Images
+                    if (["png", "jpg", "jpeg", "gif", "webp"].includes(extension)) {
                       return (
                         <img
                           key={index}
@@ -81,23 +78,33 @@ function Profile() {
                           className="media-image"
                         />
                       );
-                    } else if (["mp4", "webm"].includes(fileType)) {
+                    }
+
+                    // 🎥 Videos
+                    if (["mp4", "webm", "mov"].includes(extension)) {
                       return (
                         <video key={index} controls className="media-video">
-                          <source src={fileUrl} type={`video/${fileType}`} />
+                          <source src={fileUrl} type={`video/${extension}`} />
                           Your browser does not support the video tag.
                         </video>
                       );
-                    } else if (["mp3", "wav", "opus", "mp4"].includes(fileType)) {
+                    }
+
+                    // 🎵 Audio
+                    if (["mp3", "wav", "opus"].includes(extension)) {
                       return (
                         <audio key={index} controls className="media-audio">
-                          <source src={fileUrl} type={`audio/${fileType}`} />
+                          <source src={fileUrl} type={`audio/${extension}`} />
                           Your browser does not support the audio element.
                         </audio>
                       );
-                    } else {
-                      return <p key={index}>Unsupported media type</p>;
                     }
+
+                    return (
+                      <a key={index} href={fileUrl} target="_blank" rel="noopener noreferrer">
+                        View File
+                      </a>
+                    );
                   })}
                 </div>
               )}

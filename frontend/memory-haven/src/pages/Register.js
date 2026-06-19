@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API_URL from "../api"; // Import backend URL
+import API_URL from "../api";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -16,7 +16,7 @@ function Register() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: username, email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
@@ -38,6 +38,7 @@ function Register() {
   return (
     <div>
       <h1>Register</h1>
+
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -47,6 +48,7 @@ function Register() {
           required
         />
         <br />
+
         <input
           type="email"
           placeholder="Email"
@@ -55,6 +57,7 @@ function Register() {
           required
         />
         <br />
+
         <input
           type="password"
           placeholder="Password"
@@ -63,8 +66,10 @@ function Register() {
           required
         />
         <br />
+
         <button type="submit">Register</button>
       </form>
+
       {message && <p>{message}</p>}
     </div>
   );

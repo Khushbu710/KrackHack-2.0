@@ -28,46 +28,50 @@ export const loginUser = async (email, password) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
+
   const data = await handleResponse(response);
+
   if (data.token) {
-    localStorage.setItem('token', data.token); // Save the token
+    localStorage.setItem('token', data.token);
   }
+
   return data;
 };
 
-// Create a time capsule
-export const createTimeCapsule = async (title, message, openDate, files) => {
+// Create a time capsule (WITH MEDIA SUPPORT)
+export const createTimeCapsule = async (title, message, openDate, files = []) => {
   const token = localStorage.getItem('token');
+
   if (!token) {
     throw new Error('No token found. Please log in.');
   }
-   
+
   const formData = new FormData();
   formData.append('title', title);
   formData.append('description', message);
   formData.append('openDate', openDate);
 
-  if (files && files.length > 0) {
-    files.forEach((file) => {
-      formData.append('media', file);
-    });
-  }
+  // Attach media files if any
+  files.forEach((file) => {
+    formData.append('media', file);
+  });
 
   const response = await fetch(`${API_URL}/api/memoryhaven`, {
     method: 'POST',
     headers: {
-      // 'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
+      // ❗ DO NOT set Content-Type when using FormData
     },
-    // body: JSON.stringify({ title, message, openDate }),
     body: formData,
   });
+
   return handleResponse(response);
 };
 
 // Fetch all time capsules
 export const fetchTimeCapsules = async () => {
   const token = localStorage.getItem('token');
+
   if (!token) {
     throw new Error('No token found. Please log in.');
   }
@@ -76,12 +80,14 @@ export const fetchTimeCapsules = async () => {
     method: 'GET',
     headers: { Authorization: `Bearer ${token}` },
   });
+
   return handleResponse(response);
 };
 
 // Fetch details of a specific time capsule
 export const fetchCapsuleDetails = async (id) => {
   const token = localStorage.getItem('token');
+
   if (!token) {
     throw new Error('No token found. Please log in.');
   }
@@ -90,12 +96,14 @@ export const fetchCapsuleDetails = async (id) => {
     method: 'GET',
     headers: { Authorization: `Bearer ${token}` },
   });
+
   return handleResponse(response);
 };
 
 // Fetch user profile
 export const fetchUserProfile = async () => {
   const token = localStorage.getItem('token');
+
   if (!token) {
     throw new Error('No token found. Please log in.');
   }
@@ -104,6 +112,7 @@ export const fetchUserProfile = async () => {
     method: 'GET',
     headers: { Authorization: `Bearer ${token}` },
   });
+
   return handleResponse(response);
 };
 
