@@ -2,6 +2,15 @@
 
 **Memory Haven** is a full-stack web application where users can securely store personal memories (text, images, audio, or video) that are only accessible after a future unlock date. Think of it as a digital time capsule platform!
 
+---
+
+## Live Demo
+```text
+https://memory-haven-two.vercel.app/
+```
+
+ --- 
+ 
 ## 🛠 Tech Stack
 
 - **Frontend**: React.js  
