@@ -53,63 +53,108 @@ function Profile() {
         <p style={{ color: "red" }}>Error: {error}</p>
       ) : capsules.length > 0 ? (
         <div className="capsule-container">
-          {capsules.map((capsule) => (
-            <div key={capsule._id} className="capsule">
-              <h3 className="capsule-title">{capsule.title}</h3>
-              <p className="capsule-description">{capsule.description}</p>
+          {capsules.map((capsule) => {
+            const isLocked = new Date(capsule.openDate) > new Date();
 
-              {/* Media Preview */}
-              {capsule.media && capsule.media.length > 0 && (
-                <div className="media-container">
-                  {capsule.media.map((file, index) => {
-                    const fileUrl = file.startsWith("http")
-                      ? file
-                      : `${API_URL}${file}`;
+            return (
+              <div key={capsule._id} className="capsule">
+                <h3 className="capsule-title">{capsule.title}</h3>
 
-                    const extension = file.split(".").pop().toLowerCase();
+                <p>
+                  Opens on:{" "}
+                  {new Date(capsule.openDate).toLocaleDateString()}
+                </p>
 
-                    // 🖼 Images
-                    if (["png", "jpg", "jpeg", "gif", "webp"].includes(extension)) {
-                      return (
-                        <img
-                          key={index}
-                          src={fileUrl}
-                          alt="Capsule Media"
-                          className="media-image"
-                        />
-                      );
-                    }
+                {isLocked ? (
+                  <p className="capsule-description">
+                    🔒 This capsule is locked until{" "}
+                    {new Date(capsule.openDate).toLocaleDateString()}
+                  </p>
+                ) : (
+                  <p className="capsule-description">
+                    {capsule.description}
+                  </p>
+                )}
 
-                    // 🎥 Videos
-                    if (["mp4", "webm", "mov"].includes(extension)) {
-                      return (
-                        <video key={index} controls className="media-video">
-                          <source src={fileUrl} type={`video/${extension}`} />
-                          Your browser does not support the video tag.
-                        </video>
-                      );
-                    }
+                {/* Media Preview */}
+                {!isLocked &&
+                  capsule.media &&
+                  capsule.media.length > 0 && (
+                    <div className="media-container">
+                      {capsule.media.map((file, index) => {
+                        const fileUrl = file.startsWith("http")
+                          ? file
+                          : `${API_URL}${file}`;
 
-                    // 🎵 Audio
-                    if (["mp3", "wav", "opus"].includes(extension)) {
-                      return (
-                        <audio key={index} controls className="media-audio">
-                          <source src={fileUrl} type={`audio/${extension}`} />
-                          Your browser does not support the audio element.
-                        </audio>
-                      );
-                    }
+                        const extension = file
+                          .split(".")
+                          .pop()
+                          .toLowerCase();
 
-                    return (
-                      <a key={index} href={fileUrl} target="_blank" rel="noopener noreferrer">
-                        View File
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          ))}
+                        // 🖼 Images
+                        if (
+                          ["png", "jpg", "jpeg", "gif", "webp"].includes(extension)
+                        ) {
+                          return (
+                            <img
+                              key={index}
+                              src={fileUrl}
+                              alt="Capsule Media"
+                              className="media-image"
+                            />
+                          );
+                        }
+
+                        // 🎥 Videos
+                        if (["mp4", "webm", "mov"].includes(extension)) {
+                          return (
+                            <video
+                              key={index}
+                              controls
+                              className="media-video"
+                            >
+                              <source
+                                src={fileUrl}
+                                type={`video/${extension}`}
+                              />
+                              Your browser does not support the video tag.
+                            </video>
+                          );
+                        }
+
+                        // 🎵 Audio
+                        if (["mp3", "wav", "opus"].includes(extension)) {
+                          return (
+                            <audio
+                              key={index}
+                              controls
+                              className="media-audio"
+                            >
+                              <source
+                                src={fileUrl}
+                                type={`audio/${extension}`}
+                              />
+                              Your browser does not support the audio element.
+                            </audio>
+                          );
+                        }
+
+                        return (
+                          <a
+                            key={index}
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View File
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p>You haven't created any capsules yet.</p>

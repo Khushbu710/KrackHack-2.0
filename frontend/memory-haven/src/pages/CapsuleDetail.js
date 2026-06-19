@@ -47,7 +47,16 @@ function CapsuleDetail() {
       ) : capsule ? (
         <div>
           <h2>{capsule.title}</h2>
-          <p>{capsule.description}</p>
+
+          {new Date(capsule.openDate) > new Date() ? (
+            <p>
+              🔒 This capsule is locked until{" "}
+              {new Date(capsule.openDate).toLocaleDateString()}
+            </p>
+          ) : (
+            <p>{capsule.description}</p>
+          )}
+
           <p>
             Created on:{" "}
             {new Date(capsule.createdAt).toLocaleDateString()}
